@@ -23,11 +23,17 @@ struct Bmpiheader {
 	uint32_t count_imp_colors;
 };
 
-struct Rgbguard {
+struct Rgb {
 	int rgb_blue;
 	int rgb_green;
 	int rgb_red;
-	int rgb_reversed;
+	//int rgb_reversed;
 };
+
+
+
+/*int calculatPadding(int width) {
+	return (4 - (width * sizeof(Rgb)) % 4) % 4;
+}*/
 
 #endif
