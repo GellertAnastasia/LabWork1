@@ -2,6 +2,7 @@
 #define BMPHEADER_H
 #include <iostream>
 #pragma pack(push, 1)
+
 struct Bmpfheader {
 	uint16_t bf_type;
 	uint32_t bf_size;
@@ -27,13 +28,6 @@ struct Rgb {
 	int rgb_blue;
 	int rgb_green;
 	int rgb_red;
-	//int rgb_reversed;
 };
-
-
-
-/*int calculatPadding(int width) {
-	return (4 - (width * sizeof(Rgb)) % 4) % 4;
-}*/
 
 #endif

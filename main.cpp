@@ -1,9 +1,11 @@
 #include "bmpheader.h"
 #include "read.h"
 #include "rotate.h"
+#include "filter.h"
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+
 
 int main() {
 
@@ -33,17 +35,17 @@ int main() {
 			rgb[i][j].rgb_green = getc(infile);
 			rgb[i][j].rgb_red = getc(infile);
 		}
-		
 	}
+	fclose(infile);
+
 	
 	
+	applyGaussianFilter(rgb, bfh, bih, width, height);
 	
 	bih.width = height;
 	bih.height = width;
 	rotate_clockwise(rgb, bfh, bih, height, width);
 	rotate_counterclockwise(rgb, bfh, bih, height, width);
-	
-	fclose(infile);
 	
 	return 0;
 }
