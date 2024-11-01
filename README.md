@@ -16,10 +16,10 @@ make
 ## Run
 ./labwork
 
-##Input file
+## Input file
 source.bmp
 
-##Output files
+## Output files
 rotated_clockwise.bmp
 rotated_counterclockwise.bmp
 filter.bmp
