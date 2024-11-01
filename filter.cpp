@@ -64,4 +64,9 @@ void filter(Rgb** rgb, Bmpfheader bfh, Bmpiheader bih, int width, int height)
     }
     fclose(outfile);
 
+    for (int i = 0; i < height; i++) {
+        delete rgb1[i];
+    }
+    delete[] rgb1;
+
 }
