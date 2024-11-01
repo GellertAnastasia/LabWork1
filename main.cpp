@@ -51,19 +51,18 @@ int main()
     }
     rotate_clockwise(rgb, rgb1, bfh, bih, height, width);
     rotate_counterclockwise(rgb, rgb1, bfh, bih, height, width);
+    
+    for (int i = 0; i < height; i++) {
+        delete rgb[i];
+    }
+    delete[] rgb;
 
     filter(rgb1, bfh, bih, bih.width, bih.height);
-
-
 
     for (int i = 0; i < width; i++) {
         delete rgb1[i];
     }
     delete[] rgb1;
-    for (int i = 0; i < height; i++) {
-        delete rgb[i];
-    }
-    delete[] rgb;
 
 
     return 0;
