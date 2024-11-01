@@ -21,5 +21,7 @@ source.bmp
 
 ## Output files
 rotated_clockwise.bmp
+
 rotated_counterclockwise.bmp
+
 filter.bmp
