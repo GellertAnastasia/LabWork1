@@ -3,7 +3,7 @@
 #include <fstream>
 #include <filesystem>
 
-void applyGaussianFilter(Rgb** rgb, Bmpfheader bfh, Bmpiheader bih, int width, int height) {
+void filter(Rgb** rgb, Bmpfheader bfh, Bmpiheader bih, int width, int height) {
 	Rgb **rgb1 = new Rgb*[height];
 	for (int i = 0; i < height; i++) {
 		rgb1[i] = new Rgb[width];

@@ -1,5 +1,4 @@
 #include "bmpheader.h"
-#include "read.h"
 #include "rotate.h"
 #include "filter.h"
 #include <iostream>
@@ -20,16 +19,14 @@ int main() {
 	fread(&bfh, 1, sizeof(Bmpfheader), infile);
 	Bmpiheader bih;
 	fread(&bih, 1, sizeof(Bmpiheader), infile);
+	fseek(infile, bfh.bf_off_bits, SEEK_SET);
+	
 	int width = bih.width;
 	int height = bih.height;
-	
 	
 	Rgb **rgb = new Rgb*[height];
 	for (int i = 0; i < height; i++) {
 		rgb[i] = new Rgb[width];
-	}
-	fseek(infile, bfh.bf_off_bits, SEEK_SET);
-	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			rgb[i][j].rgb_blue = getc(infile);
 			rgb[i][j].rgb_green = getc(infile);
@@ -40,12 +37,29 @@ int main() {
 
 	
 	
-	applyGaussianFilter(rgb, bfh, bih, width, height);
-	
 	bih.width = height;
 	bih.height = width;
-	rotate_clockwise(rgb, bfh, bih, height, width);
-	rotate_counterclockwise(rgb, bfh, bih, height, width);
+	
+	Rgb **rgb1 = new Rgb*[width];
+	for (int i = 0; i < width; i++) {
+		rgb1[i] = new Rgb[height];
+	}
+	rotate_clockwise(rgb, rgb1, bfh, bih, height, width);
+	rotate_counterclockwise(rgb, rgb1, bfh, bih, height, width);
+	
+	filter(rgb1, bfh, bih, bih.width, bih.height);
+	
+	
+	
+	for (int i = 0; i < width; i++) {
+		delete rgb1[i];
+	}
+	delete[] rgb1;
+	for (int i = 0; i < height; i++) {
+		delete rgb[i];
+	}
+	delete[] rgb;
+	
 	
 	return 0;
 }

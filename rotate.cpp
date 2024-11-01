@@ -4,12 +4,8 @@
 #include <filesystem>
 
 
-void rotate_clockwise(Rgb** rgb, Bmpfheader bfh, Bmpiheader bih, int height, int width) {
+void rotate_clockwise(Rgb** rgb, Rgb** rgb1, Bmpfheader bfh, Bmpiheader bih, int height, int width) {
 
-	Rgb **rgb1 = new Rgb*[width];
-	for (int i = 0; i < width; i++) {
-		rgb1[i] = new Rgb[height];
-	}
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			rgb1[width - j - 1][i] = rgb[i][j];
@@ -38,13 +34,8 @@ void rotate_clockwise(Rgb** rgb, Bmpfheader bfh, Bmpiheader bih, int height, int
 }
 
 
-void rotate_counterclockwise(Rgb** rgb, Bmpfheader bfh, Bmpiheader bih, int height, int width) {
+void rotate_counterclockwise(Rgb** rgb, Rgb** rgb1, Bmpfheader bfh, Bmpiheader bih, int height, int width) {
 
-
-	Rgb **rgb1 = new Rgb*[width];
-	for (int i = 0; i < width; i++) {
-		rgb1[i] = new Rgb[height];
-	}
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			rgb1[j][height - i - 1] = rgb[i][j];
