@@ -1,3 +1,7 @@
+/* Anastasia Gellert st130144@student.spbu.ru
+	labwork 1
+*/
+
 #ifndef BMPHEADER_H
 #define BMPHEADER_H
 #include <iostream>

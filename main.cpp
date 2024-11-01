@@ -1,3 +1,7 @@
+/* Anastasia Gellert st130144@student.spbu.ru
+	labwork 1
+*/
+
 #include "bmpheader.h"
 #include "rotate.h"
 #include "filter.h"
@@ -8,7 +12,7 @@
 
 int main() {
 
-	FILE *infile = fopen("source1.bmp", "rb");
+	FILE *infile = fopen("source.bmp", "rb");
 	if (!infile) {
 		std::cout<<"Ошибка: не удается открыть файл"<<std::endl;
 	}
