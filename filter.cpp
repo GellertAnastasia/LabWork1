@@ -9,11 +9,13 @@
 
 void filter(Rgb** rgb, Bmpfheader bfh, Bmpiheader bih, int width, int height)
 {
+	// Память самому выделять очень опасно, можно и удалить не так, и вообще забыть
+	// Используй умные указатели или стандартные контейнеры
     Rgb **rgb1 = new Rgb*[height];
     for (int i = 0; i < height; i++) {
         rgb1[i] = new Rgb[width];
     }
-
+	// Я хочу иметь возможность задавать ядро произвольного размера
     const double kernel[5][5] = {
         {1/273.0, 4/273.0, 6/273.0, 4/273.0, 1/273.0},
         {4/273.0, 16/273.0, 24/273.0, 16/273.0, 4/273.0},
@@ -65,6 +67,8 @@ void filter(Rgb** rgb, Bmpfheader bfh, Bmpiheader bih, int width, int height)
     fclose(outfile);
 
     for (int i = 0; i < height; i++) {
+		// Ты тут используешь неправильный оператор удаления
+		// Выделяла с помощью new[], значит удалять надо delete[]
         delete rgb1[i];
     }
     delete[] rgb1;
