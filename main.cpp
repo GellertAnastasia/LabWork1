@@ -20,6 +20,8 @@ int main()
     else {
         std::cout<<"Файл открыт"<<std::endl;
     }
+	// Хранить состояние картинки в разных местах чревато ошибками и непониманием
+	// других разработчиков, которые используют твой код
     Bmpfheader bfh;
     fread(&bfh, 1, sizeof(Bmpfheader), infile);
     Bmpiheader bih;
@@ -33,6 +35,7 @@ int main()
     for (int i = 0; i < height; i++) {
         rgb[i] = new Rgb[width];
         for (int j = 0; j < width; j++) {
+			// Это надо построчно тоже
             rgb[i][j].rgb_blue = getc(infile);
             rgb[i][j].rgb_green = getc(infile);
             rgb[i][j].rgb_red = getc(infile);
