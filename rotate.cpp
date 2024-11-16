@@ -15,9 +15,9 @@ void rotate_clockwise(Rgb** rgb, Rgb** rgb1, Bmpfheader bfh, Bmpiheader bih, int
 			rgb1[width - j - 1][i] = rgb[i][j];
 		}
 	}
-	
+	// Это всё сишные функции, используй fstream, который у тебя даже подключен
 	FILE *outfile = fopen("rotated_clockwise.bmp", "wb");
-
+	
 	fwrite(&bfh, 1,	sizeof(Bmpfheader), outfile);
 	fwrite(&bih, 1,	sizeof(Bmpiheader), outfile);
 	fseek(outfile, bfh.bf_off_bits, SEEK_SET);
@@ -25,6 +25,7 @@ void rotate_clockwise(Rgb** rgb, Rgb** rgb1, Bmpfheader bfh, Bmpiheader bih, int
 	
 	for (int i = 0; i < bih.height; ++i) {
 		for (int j = 0; j < bih.width; ++j) {
+			// Надо писать построчно, по одному пикселю в сотни раз менее эффективно
 			fwrite(&(rgb1[i][j].rgb_blue), 1, 1, outfile);
 			fwrite(&(rgb1[i][j].rgb_green), 1, 1, outfile);
 			fwrite(&(rgb1[i][j].rgb_red), 1, 1, outfile);
