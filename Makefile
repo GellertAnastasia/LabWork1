@@ -16,7 +16,7 @@ LDXXFLAGS = $(CCXFLAGS) -L. -l:$(LIBPROJECT)
 
 DEPS=$(wildcard *.h)
 
-SOURCES = main.cpp bmpheader.cpp rotate.cpp filter.cpp
+SOURCES = main.cpp rotate.cpp filter.cpp
 
 OBJ = $(SOURCES:.cpp=.o)
 

@@ -8,62 +8,28 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
-
+#include <cstring>
 
 int main()
 {
-
-    FILE *infile = fopen("source.bmp", "rb");
-    if (!infile) {
+    std::ifstream infile("source.bmp", std::ios::in | std::ios::binary);
+    if (!infile)
+    {
         std::cout<<"Ошибка: не удается открыть файл"<<std::endl;
     }
-    else {
+    else
+    {
         std::cout<<"Файл открыт"<<std::endl;
     }
-    Bmpfheader bfh;
-    fread(&bfh, 1, sizeof(Bmpfheader), infile);
-    Bmpiheader bih;
-    fread(&bih, 1, sizeof(Bmpiheader), infile);
-    fseek(infile, bfh.bf_off_bits, SEEK_SET);
+    Bmp bmp;
+    infile.read(reinterpret_cast<char*>(&bmp), 54);
 
-    int width = bih.width;
-    int height = bih.height;
-
-    Rgb **rgb = new Rgb*[height];
-    for (int i = 0; i < height; i++) {
-        rgb[i] = new Rgb[width];
-        for (int j = 0; j < width; j++) {
-            rgb[i][j].rgb_blue = getc(infile);
-            rgb[i][j].rgb_green = getc(infile);
-            rgb[i][j].rgb_red = getc(infile);
-        }
-    }
-    fclose(infile);
-
-
-
-    bih.width = height;
-    bih.height = width;
-
-    Rgb **rgb1 = new Rgb*[width];
-    for (int i = 0; i < width; i++) {
-        rgb1[i] = new Rgb[height];
-    }
-    rotate_clockwise(rgb, rgb1, bfh, bih, height, width);
-    rotate_counterclockwise(rgb, rgb1, bfh, bih, height, width);
-    
-    for (int i = 0; i < height; i++) {
-        delete rgb[i];
-    }
-    delete[] rgb;
-
-    filter(rgb1, bfh, bih, bih.width, bih.height);
-
-    for (int i = 0; i < width; i++) {
-        delete rgb1[i];
-    }
-    delete[] rgb1;
-
+    rotate_clockwise(bmp);
+    rotate_counterclockwise(bmp);
+    int kernelSize = 5;
+    float sigma = 1.0f;
+    applyGaussianBlur(kernelSize, sigma);
 
     return 0;
+
 }

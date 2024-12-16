@@ -3,70 +3,107 @@
 */
 
 #include "bmpheader.h"
+#include <cmath>
 #include <iostream>
 #include <fstream>
+#include <cstring>
 #include <filesystem>
 
-void filter(Rgb** rgb, Bmpfheader bfh, Bmpiheader bih, int width, int height)
+void generateGaussianKernel(float** kernel, int size, float sigma)
 {
-    Rgb **rgb1 = new Rgb*[height];
-    for (int i = 0; i < height; i++) {
-        rgb1[i] = new Rgb[width];
+
+    float sum = 0.0f;
+    int halfSize = size / 2;
+    for (int y = -halfSize; y <= halfSize; ++y)
+    {
+        for (int x = -halfSize; x <= halfSize; ++x)
+        {
+            kernel[y + halfSize][x + halfSize] = (1.0f / (2.0f * M_PI * sigma * sigma)) * exp(-(x * x + y * y) / (2.0f * sigma * sigma));
+            sum += kernel[y + halfSize][x + halfSize];
+        }
+    }
+    for (int y = 0; y < size; ++y)
+    {
+        for (int x = 0; x < size; ++x)
+        {
+            kernel[y][x] /= sum;
+        }
+    }
+}
+
+
+void applyGaussianBlur(int kernelSize, float sigma)
+{
+
+    std::ifstream infile("rotated_clockwise.bmp", std::ios::in | std::ios::binary);
+    if (!infile)
+    {
+        std::cout<<"Ошибка: не удается открыть файл1"<<std::endl;
+    }
+    else
+    {
+        std::cout<<"Файл открыт"<<std::endl;
+    }
+    Bmp bmp;
+    infile.read(reinterpret_cast<char*>(&bmp), 54);
+    int row = (bmp.width * 3 + 3) & (~3);
+    std::unique_ptr<char[]> data = std::make_unique<char[]>(bmp.height*row);
+    infile.seekg(bmp.bf_off_bits, std::ios::beg);
+    infile.read(reinterpret_cast<char*>(data.get()), bmp.height*row);
+    infile.close();
+
+    float** kernel = new float*[kernelSize];
+    for (int i = 0; i < kernelSize; ++i)
+    {
+        kernel[i] = new float[kernelSize];
     }
 
-    const double kernel[5][5] = {
-        {1/273.0, 4/273.0, 6/273.0, 4/273.0, 1/273.0},
-        {4/273.0, 16/273.0, 24/273.0, 16/273.0, 4/273.0},
-        {6/273.0, 24/273.0, 36/273.0, 24/273.0, 6/273.0},
-        {4/273.0, 16/273.0, 24/273.0, 16/273.0, 4/273.0},
-        {1/273.0, 4/273.0, 6/273.0, 4/273.0, 1/273.0}
-    };
+    generateGaussianKernel(kernel, kernelSize, sigma);
 
-    for (int i = 0; i < height; ++i) {
-        for (int j = 0; j < width; ++j) {
-            double bSum = 0.0;
-            double gSum = 0.0;
-            double rSum = 0.0;
+    int width = bmp.width;
+    int height = bmp.height;
+    std::unique_ptr<char[]> newData = std::make_unique<char[]>(bmp.height*row);
 
-            for (int kx = -2; kx <= 2; ++kx) {
-                for (int ky = -2; ky <= 2; ++ky) {
-                    int ix = std::min(std::max(i + kx, 0), height - 1);
-                    int jx = std::min(std::max(j + ky, 0), width - 1);
-
-                    bSum += rgb[ix][jx].rgb_blue * kernel[kx + 2][ky + 2];
-                    gSum += rgb[ix][jx].rgb_green * kernel[kx + 2][ky + 2];
-                    rSum += rgb[ix][jx].rgb_red * kernel[kx + 2][ky + 2];
+    for (int y = kernelSize / 2; y < height - kernelSize / 2; ++y)
+    {
+        for (int x = kernelSize / 2; x < width - kernelSize / 2; ++x)
+        {
+            float r = 0, g = 0, b = 0;
+            for (int ky = -kernelSize / 2; ky <= kernelSize / 2; ++ky)
+            {
+                for (int kx = -kernelSize / 2; kx <= kernelSize / 2; ++kx)
+                {
+                    int pixelIndex = ((y + ky) * row + (x + kx) * 3);
+                    b += (unsigned char)(data[pixelIndex]) * kernel[ky + kernelSize / 2][kx + kernelSize / 2];
+                    g += (unsigned char)(data[pixelIndex + 1]) * kernel[ky + kernelSize / 2][kx + kernelSize / 2];
+                    r += (unsigned char)(data[pixelIndex + 2]) * kernel[ky + kernelSize / 2][kx + kernelSize / 2];
                 }
             }
 
-            rgb1[i][j].rgb_blue = static_cast<unsigned char>(std::min(std::max(int(bSum), 0), 255));
-            rgb1[i][j].rgb_green = static_cast<unsigned char>(std::min(std::max(int(gSum), 0), 255));
-            rgb1[i][j].rgb_red = static_cast<unsigned char>(std::min(std::max(int(rSum), 0), 255));
+            int newPixelIndex = (y * row + x * 3);
+            newData[newPixelIndex] = std::min(std::max(int(b), 0), 255);
+            newData[newPixelIndex + 1] = std::min(std::max(int(g), 0), 255);
+            newData[newPixelIndex + 2] = std::min(std::max(int(r), 0), 255);
         }
     }
 
-    FILE *outfile = fopen("filter.bmp", "wb");
-    fwrite(&bfh, 1,	sizeof(Bmpfheader), outfile);
-    fwrite(&bih, 1,	sizeof(Bmpiheader), outfile);
-    fseek(outfile, bfh.bf_off_bits, SEEK_SET);
-    int padding = (4 - (bih.width * 3) % 4) % 4;
-
-    for (int i = 0; i < height; ++i) {
-        for (int j = 0; j < width; ++j) {
-            fwrite(&(rgb1[i][j].rgb_blue), 1, 1, outfile);
-            fwrite(&(rgb1[i][j].rgb_green), 1, 1, outfile);
-            fwrite(&(rgb1[i][j].rgb_red), 1, 1, outfile);
-        }
-        for (int k = 0; k < padding; k++) {
-            fputc(0, outfile);
-        }
-
+    for (int i = 0; i < kernelSize; ++i)
+    {
+        delete[] kernel[i];
     }
-    fclose(outfile);
+    delete[] kernel;
 
-    for (int i = 0; i < height; i++) {
-        delete rgb1[i];
+    std::ofstream outfile("filter.bmp", std::ios::out | std::ios::binary);
+    if (!outfile)
+    {
+        std::cerr << "Ошибка: не удается открыть файл для записи" << std::endl;
+        return;
     }
-    delete[] rgb1;
-
+    outfile.write(reinterpret_cast<const char*>(&bmp), sizeof(Bmp));
+    outfile.seekp(bmp.bf_off_bits, std::ios::beg);
+    outfile.write(reinterpret_cast<const char*>(newData.get()), bmp.height * row);
 }
+
+
+
+

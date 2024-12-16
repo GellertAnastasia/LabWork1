@@ -5,6 +5,7 @@
 #ifndef FILTER_H
 #define FILTER_H
 
-void filter(Rgb** rgb, Bmpfheader bfh, Bmpiheader bih, int width, int height);
+void generateGaussianKernel(float** kernel, int size, float sigma);
+void applyGaussianBlur(int kernelSize, float sigma);
 
 #endif
