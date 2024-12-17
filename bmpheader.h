@@ -5,6 +5,7 @@
 #ifndef BMPHEADER_H
 #define BMPHEADER_H
 #include <iostream>
+#include <cstdint>
 #pragma pack(push, 1)
 
 struct Bmp
