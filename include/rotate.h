@@ -5,7 +5,6 @@
 #ifndef ROTATE_H
 #define ROTATE_H
 
-void rotate_clockwise(Bmp bmp);
-void rotate_counterclockwise(Bmp bmp);
+void rotate(Bmp bmp, const std::string& filename, bool isClockwise);
 
 #endif
