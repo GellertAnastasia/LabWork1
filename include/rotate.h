@@ -11,5 +11,6 @@
 #include <omp.h>
 
 void rotate(Bmp bmp, const std::string& filename, bool isClockwise);
+void old_rotate(Bmp bmp, const std::string& filename, bool isClockwise);
 
 #endif

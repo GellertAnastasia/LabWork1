@@ -14,8 +14,6 @@
 int main()
 {
     auto start = std::chrono::high_resolution_clock::now();
-    
-    omp_set_num_threads(omp_get_max_threads());
     std::ifstream infile("source.bmp", std::ios::in | std::ios::binary);
     if (!infile)
     {
@@ -28,16 +26,16 @@ int main()
     Bmp bmp;
     infile.read(reinterpret_cast<char*>(&bmp), 54);
 
-    rotate(bmp, "clockwise.bmp", true);
-    rotate(bmp, "counterclockwise.bmp", false);
+    old_rotate(bmp, "clockwise.bmp", true);
+    old_rotate(bmp, "counterclockwise.bmp", false);
     int kernel_size = 5;
     float sigma = 1.0f;
-    apply_gaussian_blur(kernel_size, sigma);
+    old_apply_gaussian_blur(kernel_size, sigma);
     
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
     std::cout << "Time: " << duration.count() << " seconds\n";
-
+    
     return 0;
 
 }
