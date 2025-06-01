@@ -2,7 +2,7 @@ PROJECT = labwork
 TESTPROJECT = test-labwork
 
 CXX = g++
-CCXFLAGS = -Iinclude -std=c++17 -Werror -Wpedantic -Wall -g -fPIC
+CCXFLAGS = -Iinclude -std=c++17 -Werror -Wpedantic -Wall -g -fPIC -fopenmp -O2
 LDXXFLAGS = $(CCXFLAGS) -L.
 LDGTESTFLAGS = $(LDXXFLAGS) -lgtest -lgmock -lgtest_main -lpthread
 

@@ -2,10 +2,7 @@
 	labwork 1
 */
 
-#include "bmpheader.h"
-#include <iostream>
-#include <fstream>
-#include <filesystem>
+#include "rotate.h"
 
 
 void rotate(Bmp bmp, const std::string& filename, bool isClockwise)
@@ -24,6 +21,7 @@ void rotate(Bmp bmp, const std::string& filename, bool isClockwise)
 
     std::unique_ptr<char[]> rotated_data = std::make_unique<char[]>(n_bmp.height * n_row);
     
+    #pragma omp parallel for collapse(2) schedule(dynamic)
     for (int y = 0; y < bmp.height; ++y)
     {
         for (int x = 0; x < bmp.width; ++x)

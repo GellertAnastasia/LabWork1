@@ -4,6 +4,14 @@
 
 #ifndef FILTER_H
 #define FILTER_H
+#include "bmpheader.h"
+#include <cmath>
+#include <iostream>
+#include <fstream>
+#include <cstring>
+#include <filesystem>
+#include <memory>
+#include <omp.h>
 
 void generate_gaussian_kernel(float** kernel, int size, float sigma);
 void apply_gaussian_blur(int kernel_size, float sigma);

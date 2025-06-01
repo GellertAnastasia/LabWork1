@@ -2,18 +2,14 @@
 	labwork 1
 */
 
-#include "bmpheader.h"
-#include <cmath>
-#include <iostream>
-#include <fstream>
-#include <cstring>
-#include <filesystem>
+#include "filter.h"
 
 void generate_gaussian_kernel(float** kernel, int size, float sigma)
 {
-
     float sum = 0.0f;
     int half_size = size / 2;
+    
+    #pragma omp parallel for reduction(+:sum) collapse(2) schedule(static)
     for (int y = -half_size; y <= half_size; ++y)
     {
         for (int x = -half_size; x <= half_size; ++x)
@@ -22,6 +18,8 @@ void generate_gaussian_kernel(float** kernel, int size, float sigma)
             sum += kernel[y + half_size][x + half_size];
         }
     }
+    
+    #pragma omp parallel for collapse(2) schedule(static)
     for (int y = 0; y < size; ++y)
     {
         for (int x = 0; x < size; ++x)
@@ -63,7 +61,8 @@ void apply_gaussian_blur(int kernel_size, float sigma)
     int width = bmp.width;
     int height = bmp.height;
     std::unique_ptr<char[]> new_data = std::make_unique<char[]>(bmp.height*row);
-
+    
+    #pragma omp parallel for schedule(dynamic) collapse(2)
     for (int y = kernel_size / 2; y < height - kernel_size / 2; ++y)
     {
         for (int x = kernel_size / 2; x < width - kernel_size / 2; ++x)
