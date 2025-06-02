@@ -51,7 +51,7 @@ void rotate(Bmp bmp, const std::string& filename, bool is_clockwise)
 
 void old_rotate(Bmp bmp, const std::string& filename, bool is_clockwise)
 {
-    std::ifstream infile("source2.bmp", std::ios::binary);
+    std::ifstream infile("source.bmp", std::ios::binary);
     int row = (bmp.width * 3 + 3) & (~3);
     std::unique_ptr<char[]> data = std::make_unique<char[]>(bmp.height * row);
     infile.seekg(bmp.bf_off_bits, std::ios::beg);

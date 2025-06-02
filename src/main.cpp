@@ -14,7 +14,7 @@
 int main()
 {
     
-    std::ifstream infile("source2.bmp", std::ios::in | std::ios::binary);
+    std::ifstream infile("source.bmp", std::ios::in | std::ios::binary);
     if (!infile)
     {
         std::cout<<"Ошибка: не удается открыть файл"<<std::endl;
