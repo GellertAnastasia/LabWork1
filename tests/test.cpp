@@ -24,7 +24,8 @@ TEST(RotateTest, Clockwise)
     auto oldend = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
     std::chrono::duration<double> oldduration = oldend - oldstart;
-    std::cout << "Time: " << duration.count()<<oldduration.count() << " seconds\n";
+    std::cout << "Time: " << duration.count()<<" " <<oldduration.count() << " seconds\n";
+    std::filesystem::remove("clockwise.bmp");
     EXPECT_TRUE(true);
 }
 
@@ -41,7 +42,8 @@ TEST(RotateTest, Counterclockwise)
     auto oldend = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
     std::chrono::duration<double> oldduration = oldend - oldstart;
-    std::cout << "Time: " << duration.count()<<oldduration.count() << " seconds\n";
+    std::cout << "Time: " << duration.count()<< " " <<oldduration.count() << " seconds\n";
+    std::filesystem::remove("counterclockwise.bmp");
     EXPECT_TRUE(true);
 }
 
@@ -51,13 +53,14 @@ TEST(GaussTest, Gauss)
     Bmp bmp;
     infile.read(reinterpret_cast<char*>(&bmp), 54);
     auto start = std::chrono::high_resolution_clock::now();
-    apply_gaussian_blur(5,1.0f);
+    apply_gaussian_blur("source.bmp",5,1.0f);
     auto end = std::chrono::high_resolution_clock::now();
     auto oldstart = std::chrono::high_resolution_clock::now();
-    old_apply_gaussian_blur(5,1.0f);
+    old_apply_gaussian_blur("source.bmp",5,1.0f);
     auto oldend = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
     std::chrono::duration<double> oldduration = oldend - oldstart;
-    std::cout << "Time: " << duration.count()<<oldduration.count() << " seconds\n";
+    std::cout << "Time: " << duration.count()<<" " <<oldduration.count() << " seconds\n";
+    std::filesystem::remove("filter.bmp");
     EXPECT_TRUE(true);
 }

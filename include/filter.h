@@ -14,9 +14,9 @@
 #include <omp.h>
 
 void generate_gaussian_kernel(float** kernel, int size, float sigma);
-void apply_gaussian_blur(int kernel_size, float sigma);
+void apply_gaussian_blur(const std::string& filename, int kernel_size, float sigma);
 
 void old_generate_gaussian_kernel(float** kernel, int size, float sigma);
-void old_apply_gaussian_blur(int kernelSize, float sigma);
+void old_apply_gaussian_blur(const std::string& filename, int kernelSize, float sigma);
 
 #endif

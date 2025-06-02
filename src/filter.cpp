@@ -30,14 +30,10 @@ void generate_gaussian_kernel(float** kernel, int size, float sigma)
 }
 
 
-void apply_gaussian_blur(int kernel_size, float sigma)
+void apply_gaussian_blur(const std::string& filename, int kernel_size, float sigma)
 {
 
-    std::ifstream infile("clockwise.bmp", std::ios::in | std::ios::binary);
-    if (!infile)
-    {
-        std::cout<<"Ошибка: не удается открыть файл1"<<std::endl;
-    }
+    std::ifstream infile(filename, std::ios::binary);
     Bmp bmp;
     infile.read(reinterpret_cast<char*>(&bmp), 54);
     int row = (bmp.width * 3 + 3) & (~3);
@@ -125,14 +121,9 @@ void old_generate_gaussian_kernel(float** kernel, int size, float sigma)
 }
 
 
-void old_apply_gaussian_blur(int kernel_size, float sigma)
+void old_apply_gaussian_blur(const std::string& filename, int kernel_size, float sigma)
 {
-
-    std::ifstream infile("clockwise.bmp", std::ios::in | std::ios::binary);
-    if (!infile)
-    {
-        std::cout<<"Ошибка: не удается открыть файл1"<<std::endl;
-    }
+    std::ifstream infile(filename, std::ios::binary);
     Bmp bmp;
     infile.read(reinterpret_cast<char*>(&bmp), 54);
     int row = (bmp.width * 3 + 3) & (~3);
