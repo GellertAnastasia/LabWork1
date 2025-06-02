@@ -10,7 +10,7 @@
 #include <filesystem>
 #include <omp.h>
 
-void rotate(Bmp bmp, const std::string& filename, bool isClockwise);
-void old_rotate(Bmp bmp, const std::string& filename, bool isClockwise);
+void rotate(Bmp bmp, const std::string& filename, bool is_clockwise);
+void old_rotate(Bmp bmp, const std::string& filename, bool is_clockwise);
 
 #endif

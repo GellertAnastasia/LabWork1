@@ -5,7 +5,7 @@
 #include "rotate.h"
 
 
-void rotate(Bmp bmp, const std::string& filename, bool isClockwise)
+void rotate(Bmp bmp, const std::string& filename, bool is_clockwise)
 {
     std::ifstream infile("source.bmp", std::ios::binary);
     int row = (bmp.width * 3 + 3) & (~3);
@@ -21,7 +21,7 @@ void rotate(Bmp bmp, const std::string& filename, bool isClockwise)
 
     std::unique_ptr<char[]> rotated_data = std::make_unique<char[]>(n_bmp.height * n_row);
     
-    #pragma omp parallel for collapse(2) schedule(dynamic)
+    #pragma omp parallel for collapse(2)
     for (int y = 0; y < bmp.height; ++y)
     {
         for (int x = 0; x < bmp.width; ++x)
@@ -29,7 +29,7 @@ void rotate(Bmp bmp, const std::string& filename, bool isClockwise)
             int old_index = y * row + x * 3;
             int new_index;
             
-            if (isClockwise) {
+            if (is_clockwise) {
                 new_index = (bmp.width - x - 1) * n_row + y * 3;
             } else {
                 new_index = x * n_row + (bmp.height - y - 1) * 3;
@@ -49,9 +49,9 @@ void rotate(Bmp bmp, const std::string& filename, bool isClockwise)
 
 
 
-void old_rotate(Bmp bmp, const std::string& filename, bool isClockwise)
+void old_rotate(Bmp bmp, const std::string& filename, bool is_clockwise)
 {
-    std::ifstream infile("source.bmp", std::ios::binary);
+    std::ifstream infile("source2.bmp", std::ios::binary);
     int row = (bmp.width * 3 + 3) & (~3);
     std::unique_ptr<char[]> data = std::make_unique<char[]>(bmp.height * row);
     infile.seekg(bmp.bf_off_bits, std::ios::beg);
@@ -65,7 +65,6 @@ void old_rotate(Bmp bmp, const std::string& filename, bool isClockwise)
 
     std::unique_ptr<char[]> rotated_data = std::make_unique<char[]>(n_bmp.height * n_row);
     
-    #pragma omp parallel for collapse(2) schedule(dynamic)
     for (int y = 0; y < bmp.height; ++y)
     {
         for (int x = 0; x < bmp.width; ++x)
@@ -73,7 +72,7 @@ void old_rotate(Bmp bmp, const std::string& filename, bool isClockwise)
             int old_index = y * row + x * 3;
             int new_index;
             
-            if (isClockwise) {
+            if (is_clockwise) {
                 new_index = (bmp.width - x - 1) * n_row + y * 3;
             } else {
                 new_index = x * n_row + (bmp.height - y - 1) * 3;
