@@ -10,6 +10,8 @@ Reading information about the source bmp file.
 Rotate the image 90 degrees clockwise and counterclockwise. 
 Applying a Gaussian filter to an inverted image.
 
+The project was parallelized and the efficiency was tested
+
 ## Build
 make
 
